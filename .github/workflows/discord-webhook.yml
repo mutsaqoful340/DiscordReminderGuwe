@@ -22,10 +22,11 @@ jobs:
             --arg ref_name "${{ github.ref_name }}" \
             --arg actor "${{ github.actor }}" \
             --arg sha "$short_sha" \
-            '{content: "New push to \($repository) on `\($ref_name)` by `\($actor)`. Commit: `\($sha)`"}')
+            --arg commit_url "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}" \
+            '{content: "New push to \($repository) on `\($ref_name)` by `\($actor)`. Commit: `\($sha)`\n\($commit_url)"}')
 
           echo "Sending Discord notification for ${GITHUB_REPOSITORY}@${short_sha}"
           curl --fail-with-body -X POST \
             -H "Content-Type: application/json" \
             -d "$payload" \
-            "$DISCORD_WEBHOOK_URL"
+            "$DISCORD_WEBHOOK_URL" || { echo "Failed to send Discord notification"; exit 1; }
