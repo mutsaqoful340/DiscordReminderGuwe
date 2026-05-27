@@ -15,7 +15,14 @@ jobs:
       - name: Send Discord notification
         if: ${{ env.DISCORD_WEBHOOK_URL != '' }}
         run: |
+          payload=$(jq -n \
+            --arg repository "${{ github.repository }}" \
+            --arg ref_name "${{ github.ref_name }}" \
+            --arg actor "${{ github.actor }}" \
+            --arg sha "${{ github.sha }}" \
+            '{content: "New push to \($repository) on `\($ref_name)` by `\($actor)`. Commit: `\($sha)`"}')
+
           curl --fail -X POST \
             -H "Content-Type: application/json" \
-            -d '{"content":"New push to ${{ github.repository }} on `${{ github.ref_name }}` by `${{ github.actor }}`."}' \
+            -d "$payload" \
             "$DISCORD_WEBHOOK_URL"
