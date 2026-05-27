@@ -7,13 +7,15 @@ on:
 
 jobs:
   notify:
+    permissions: {}
     runs-on: ubuntu-latest
+    env:
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
     steps:
       - name: Send Discord notification
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        if: ${{ env.DISCORD_WEBHOOK_URL != '' }}
         run: |
-          curl -X POST \
+          curl --fail -X POST \
             -H "Content-Type: application/json" \
             -d '{"content":"New push to ${{ github.repository }} on `${{ github.ref_name }}` by `${{ github.actor }}`."}' \
             "$DISCORD_WEBHOOK_URL"
