@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: Send Discord notification
         if: ${{ env.DISCORD_WEBHOOK_URL != '' }}
+        shell: bash
         run: |
           short_sha="${GITHUB_SHA::7}"
           payload=$(jq -n \
@@ -23,6 +24,7 @@ jobs:
             --arg sha "$short_sha" \
             '{content: "New push to \($repository) on `\($ref_name)` by `\($actor)`. Commit: `\($sha)`"}')
 
+          echo "Sending Discord notification for ${GITHUB_REPOSITORY}@${short_sha}"
           curl --fail-with-body -X POST \
             -H "Content-Type: application/json" \
             -d "$payload" \
