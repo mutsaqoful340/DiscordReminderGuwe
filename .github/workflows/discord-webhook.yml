@@ -14,4 +14,4 @@ jobs:
           curl -X POST \
             -H 'Content-Type: application/json' \
             -d '{"content":"Your daily message here!"}' \
-            '${{ secrets.DISCORD_WEBHOOK_REMINDER }}'
+            '${{ secrets.DISCORD_WEBHOOK }}'
