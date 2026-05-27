@@ -2,18 +2,16 @@ name: Daily Discord Webhook
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # Runs every day at 9:00 AM UTC
-  workflow_dispatch:      # Also allows manual trigger
+    - cron: '0 9 * * *'
+  workflow_dispatch:
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d '{"content": "Daily automated message!"}' \
-               $DISCORD_WEBHOOK
+          curl -X POST \
+            -H 'Content-Type: application/json' \
+            -d '{"content":"Your daily message here!"}' \
+            '${{ secrets.DISCORD_WEBHOOK }}'
